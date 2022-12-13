@@ -14,15 +14,9 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   final storage = const FlutterSecureStorage();
 
-  userDataCheck() async {
-    String? value = await storage.read(key: 'token');
-    if (value != null) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => HomePage()));
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
-    }
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: BackgroundImage());
   }
 
   @override
@@ -31,8 +25,17 @@ class _FirstPageState extends State<FirstPage> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: BackgroundImage());
+  userDataCheck() async {
+    String? value = await storage.read(key: 'token');
+    print(value);
+    if (value != null) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
+    } else {
+      if (value != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }
+    }
   }
 }

@@ -38,6 +38,8 @@ dependencies:
   pocketbase: ^0.5.0+1
   dio: ^4.0.6
   flutter_secure_storage: ^7.0.0
+  url_launcher: ^6.1.7
+  whatsapp_unilink: ^2.1.0
 
 dev_dependencies:
   flutter_test:

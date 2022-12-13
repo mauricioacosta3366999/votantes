@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:votantes/pages/agregarVotantes.dart';
+import 'package:votantes/pages/dayD.dart';
 import 'package:votantes/pages/login.dart';
+import 'package:votantes/pages/vontantesList.dart';
 import 'package:votantes/pages/widgets/appbar.dart';
 import 'package:votantes/pages/widgets/backImage.dart';
 import 'package:votantes/pages/widgets/textButton.dart';
@@ -27,15 +29,37 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               MyTextButton(
+                  text: 'Crear Miembro',
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AgregarVotantes(onlySearchCdi: false)));
+                  }),
+              MyTextButton(
                   text: 'Agregar votantes',
                   function: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const AgregarVotantes()));
+                            builder: (context) =>
+                                const AgregarVotantes(onlySearchCdi: false)));
                   }),
-              MyTextButton(text: 'Ver lista de votantes', function: () {}),
-              MyTextButton(text: 'Dia D', function: () {}),
+              MyTextButton(
+                  text: 'Ver lista de votantes',
+                  function: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const VotantesList()));
+                  }),
+              MyTextButton(
+                  text: 'Dia D',
+                  function: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const DayD()));
+                  }),
               MyTextButton(
                   text: 'Desconectarse',
                   function: () {

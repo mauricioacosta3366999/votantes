@@ -35,11 +35,11 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       MyTextField(
                         icon: const Icon(
-                          Icons.email,
+                          Icons.person,
                           color: Colors.white,
                         ),
                         controller: emailController,
-                        labelText: 'Email',
+                        labelText: 'Usuario',
                       ),
                       const SizedBox(height: 30),
                       MyTextField(
@@ -49,6 +49,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         controller: passController,
                         labelText: 'Contraseña',
+                        isPass: true,
                       ),
                       const SizedBox(height: 50),
                       loading

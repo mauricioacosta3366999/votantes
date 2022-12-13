@@ -4,10 +4,11 @@ import 'package:votantes/pages/widgets/appbar.dart';
 import 'package:votantes/pages/widgets/backImage.dart';
 import 'package:votantes/pages/widgets/prymaryButton.dart';
 import 'package:votantes/pages/widgets/textField.dart';
+import 'package:votantes/services/endpoints.dart';
 
 class AgregarVotantes extends StatefulWidget {
-  const AgregarVotantes({super.key});
-
+  final bool onlySearchCdi;
+  const AgregarVotantes({super.key, required this.onlySearchCdi});
   @override
   State<AgregarVotantes> createState() => _AgregarVotantesState();
 }
@@ -54,17 +55,21 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                       controller: cdiController,
                       labelText: "Número de CDI"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-                  MyTextField(
-                      icon: const Icon(
-                        Icons.phone,
-                        color: Colors.white,
-                      ),
-                      controller: phoneController,
-                      labelText: "Número de teléfono"),
+                  widget.onlySearchCdi
+                      ? Container()
+                      : MyTextField(
+                          icon: const Icon(
+                            Icons.phone,
+                            color: Colors.white,
+                          ),
+                          controller: phoneController,
+                          labelText: "Número de teléfono"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   PrymaryButton(
                     text: 'Buscar datos',
-                    function: () {},
+                    function: () async {
+                      await Endpoints().searchByCi(cdi: '5591945');
+                    },
                   )
                 ],
               ),

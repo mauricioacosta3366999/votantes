@@ -21,4 +21,16 @@ class Endpoints {
       return false;
     }
   }
+
+  searchByCi({required String cdi}) async {
+    try {
+      final record = await pb.collection('votantes').getFirstListItem(
+            'ci="$cdi"',
+            expand: 'relField1,relField2.subRelField',
+          );
+      print(record);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
