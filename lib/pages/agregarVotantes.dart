@@ -87,7 +87,7 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
       setState(() => loading = true);
       CdiDetallesModel cdiDetalles =
           await Endpoints().searchByCi(cdi: cdiController.text);
-      if (cdiDetalles.collectionId != null) {
+      if (cdiDetalles.ci != null) {
         cdiDetalles.celular = phoneController.text;
         Navigator.push(
             context,

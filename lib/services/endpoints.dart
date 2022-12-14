@@ -17,6 +17,7 @@ class Endpoints {
       var response =
           await app.post(url, data: {"identity": user, "password": pass});
       await storage.write(key: 'token', value: response.data['token']);
+      await storage.write(key: 'id', value: response.data['id']);
       await storage.write(
           key: 'userName', value: response.data['record']['name']);
       await storage.write(
@@ -58,24 +59,42 @@ class Endpoints {
           "https://pocketbase-production-a3d9.up.railway.app/api/collections/empadronados/records?filter=ci=$cdi";
       var response = await app.get(url);
       if (response.data['items'].isEmpty) {
-        var responses = await app.post('https://www.anr.org.py/padron/api.php',
-            data: {"cpt": "-", "cedula": "2373855"});
+//consultar en el endpoint del gobierno
+        var responses = await app.post(
+          'https://www.anr.org.py/padron/api.php',
+          data: {"cpt": "-", "cedula": cdi},
+        );
         var decoder = json.decode(responses.data);
         CdiDetallesModel model = CdiDetallesModel(
-            apellidos: decoder['data'][0]['apellido'],
-            nombres: decoder['data'][0]['nombre'],
-            ci: int.parse(cdi),
-            celular: phone);
-        print(decoder);
+          apellidos: decoder['data'][0]['apellido'],
+          nombres: decoder['data'][0]['nombre'],
+          ci: int.parse(cdi),
+          celular: phone,
+        );
+//agregar persona al padrón
+        try {
+          final body = <String, dynamic>{
+            "ci": model.ci,
+            "apellidos": model.apellidos,
+            "nombres": model.nombres,
+            "celular": phone,
+          };
+          final newData =
+              await pb.collection('empadronados').create(body: body);
+        } catch (e) {
+          print(e);
+        }
+        return model;
       } else {
-        print('data');
+        CdiDetallesModel model =
+            CdiDetallesModel.fromJson(response.data['items'][0]);
+        return model;
       }
-      CdiDetallesModel model =
-          CdiDetallesModel.fromJson(response.data['items'][0]);
-      return model;
     } catch (e) {
       print(e);
       return CdiDetallesModel();
     }
   }
+
+  agregarVotante() async {}
 }

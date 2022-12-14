@@ -44,7 +44,8 @@ class _CdiDataState extends State<CdiData> {
                 style: AppCongig().prymaryStrongTextStyle,
               ),
               Text(
-                '${widget.cdiDetalles.nombres} ${widget.cdiDetalles.nombres}',
+                '${widget.cdiDetalles.nombres} ${widget.cdiDetalles.apellidos}',
+                textAlign: TextAlign.center,
                 style: AppCongig().prymaryTextStyle,
               ),
               const SizedBox(height: 20),
@@ -54,15 +55,6 @@ class _CdiDataState extends State<CdiData> {
               ),
               Text(
                 widget.cdiDetalles.celular!,
-                style: AppCongig().prymaryTextStyle,
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Sexo:',
-                style: AppCongig().prymaryStrongTextStyle,
-              ),
-              Text(
-                widget.cdiDetalles.sexo == 'F' ? 'Femenino' : 'Masculino',
                 style: AppCongig().prymaryTextStyle,
               ),
               const SizedBox(height: 50),
