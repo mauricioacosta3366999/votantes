@@ -27,28 +27,6 @@ class Endpoints {
     }
   }
 
-  memberCreate({required String ci, required String pass}) async {
-    var url = '$baseUrl/api/collections/miembros/records';
-    try {
-      var response = await app.post(url, data: {
-        'username': ci,
-        'password': pass,
-        'passwordConfirm': pass,
-        'type': 'miembro',
-        'email': 'test@gmail.com',
-        'emailVisibility': true,
-        'apellidos': 'test ap',
-        'celular': '000000000',
-        'ci': '0000000',
-        'nombres': 'test nom',
-        'code': '1'
-      });
-      print(response);
-    } catch (e) {
-      print(e);
-    }
-  }
-
   searchByCi({required String cdi, String? phone}) async {
     String? value = await storage.read(key: 'token');
     app.options.headers['content-Type'] = 'application/json';
@@ -71,19 +49,24 @@ class Endpoints {
         print('data');
       }
       CdiDetallesModel model =
-          CdiDetallesModel.fromJson(response.data['items'][0]);
+      CdiDetallesModel.fromJson(response.data['items'][0]);
       return model;
     } catch (e) {
       print(e);
       return CdiDetallesModel();
+    }
+  }
+
   Future<String> memberCreate({required String ci, required String pass}) async {
+    String? value = await storage.read(key: 'token');
+    app.options.headers['content-Type'] = 'application/json';
+    app.options.headers["Authorization"] = "Bearer $value";
     try{
       var userId = await storage.read(key: "userId");
-      final record = await pb.collection('seccionaleros').getFirstListItem(
+      final seccionalero = await pb.collection('seccionaleros').getFirstListItem(
         'usuario="$userId"',
         expand: 'relField1,relField2.subRelField',
       );
-      var seccionaleroId = record.id;
       final userDto = <String, dynamic>{
         "username": ci,
         "password": pass,
@@ -92,7 +75,7 @@ class Endpoints {
       };
       final user = await pb.collection('users').create(body: userDto);
       final memberDto = <String, dynamic>{
-        "seccionalero": seccionaleroId,
+        "seccionalero": seccionalero.id,
         "ci": ci,
         "usuario": user.id,
         "celular": 1234567,
@@ -100,12 +83,10 @@ class Endpoints {
         "apellidos": "test test",
       };
 
-      var x =  await pb.collection('miembros').create(body: memberDto);
-
+      await pb.collection('miembros').create(body: memberDto);
       return "Miembro Creado exitosamente";
     } catch(e) {
-      var error = e as ClientException;
-      return error.response.toString();
+      throw ClientException();
     }
   }
 }
