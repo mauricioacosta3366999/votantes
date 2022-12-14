@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:votantes/pages/agregarMiembro.dart';
 import 'package:votantes/pages/agregarVotantes.dart';
 import 'package:votantes/pages/dayD.dart';
 import 'package:votantes/pages/login.dart';
@@ -21,9 +22,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    storage.read(key: "userType").then((value) => setState(()=>isSeccionalero = value == "seccionalero"));
+    storage.read(key: "userType").then(
+        (value) => setState(() => isSeccionalero = value == "seccionalero"));
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if(isSeccionalero)
+              if (isSeccionalero)
                 MyTextButton(
                     text: 'Crear Miembro',
                     function: () {
@@ -108,9 +111,10 @@ class _HomePageState extends State<HomePage> {
               child: const Text('Cerrar sesión'),
               onPressed: () async {
                 await storage.deleteAll();
-                if(!mounted) return;
+                if (!mounted) return;
                 Navigator.popUntil(context, (route) => false);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()));
               },
             ),
           ],

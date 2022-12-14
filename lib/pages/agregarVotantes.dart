@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:votantes/appConfig.dart';
+import 'package:votantes/models/cdiDetallesModel.dart';
+import 'package:votantes/pages/cdiData.dart';
 import 'package:votantes/pages/widgets/appbar.dart';
 import 'package:votantes/pages/widgets/backImage.dart';
 import 'package:votantes/pages/widgets/prymaryButton.dart';
@@ -16,6 +18,7 @@ class AgregarVotantes extends StatefulWidget {
 class _AgregarVotantesState extends State<AgregarVotantes> {
   final cdiController = TextEditingController();
   final phoneController = TextEditingController();
+  bool loading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +34,6 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.arrow_circle_left_outlined,
-                    color: Colors.white,
-                    size: 50,
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.06),
                   Text(
                     'Agregar Votantes',
                     style: AppCongig().prymaryStrongTextStyle,
@@ -65,17 +62,59 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                           controller: phoneController,
                           labelText: "Número de teléfono"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                  PrymaryButton(
-                    text: 'Buscar datos',
-                    function: () async {
-                      await Endpoints().searchByCi(cdi: '5591945');
-                    },
-                  )
+                  loading
+                      ? const CircularProgressIndicator()
+                      : PrymaryButton(
+                          text: 'Buscar datos',
+                          function: () async {
+                            dataSearch();
+                          },
+                        )
                 ],
               ),
             ),
           )
         ],
+      ),
+    );
+  }
+
+  dataSearch() async {
+    if (cdiController.text.isEmpty || cdiController.text.length != 7) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(showSnack('Agregá un número de cédula', 3));
+    } else {
+      setState(() => loading = true);
+      CdiDetallesModel cdiDetalles =
+          await Endpoints().searchByCi(cdi: cdiController.text);
+      if (cdiDetalles.collectionId != null) {
+        cdiDetalles.celular = phoneController.text;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CdiData(
+                      cdiDetalles: cdiDetalles,
+                    )));
+        setState(() => loading = false);
+      } else {
+        setState(() => loading = false);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(showSnack('No se encontró en el padrón', 3));
+      }
+    }
+  }
+
+  showSnack(
+    String text,
+    int duration,
+  ) {
+    return SnackBar(
+      duration: Duration(seconds: duration),
+      content: Text(text),
+      backgroundColor: Colors.red[400],
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
     );
   }
