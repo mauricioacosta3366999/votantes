@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:votantes/pages/agregarMiembro.dart';
 import 'package:votantes/pages/agregarVotantes.dart';
 import 'package:votantes/pages/dayD.dart';
 import 'package:votantes/pages/login.dart';
@@ -43,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const AgregarVotantes(onlySearchCdi: false)));
+                                  const AgregarMiembro()));
                     }),
               MyTextButton(
                   text: 'Agregar votantes',
