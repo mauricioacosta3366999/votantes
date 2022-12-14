@@ -5,9 +5,11 @@ class MyTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
   final Icon icon;
+  final TextInputType keyboardType;
   const MyTextField(
       {super.key,
       this.isPass = false,
+      this.keyboardType = TextInputType.text,
       required this.controller,
       required this.icon,
       required this.labelText});
@@ -25,6 +27,7 @@ class _MyTextFieldState extends State<MyTextField> {
       cursorColor: Colors.white,
       style: const TextStyle(color: Colors.white),
       obscureText: widget.isPass! ? !_passwordVisible : false,
+      keyboardType: widget.keyboardType,
       decoration: InputDecoration(
         prefixIcon: widget.icon,
         suffixIcon: widget.isPass!

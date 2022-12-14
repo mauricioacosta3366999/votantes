@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  const AgregarVotantes(onlySearchCdi: false)));
+                                  const AgregarMiembro()));
                     }),
               MyTextButton(
                   text: 'Agregar votantes',

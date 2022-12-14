@@ -46,6 +46,7 @@ class _AgregarMiembroState extends State<AgregarMiembro> {
                         Icons.chrome_reader_mode_rounded,
                         color: Colors.white,
                       ),
+                      keyboardType: TextInputType.number,
                       controller: cdiController,
                       labelText: "Número de CDI"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -65,8 +66,18 @@ class _AgregarMiembroState extends State<AgregarMiembro> {
                           text: 'Crear miembro',
                           function: () async {
                             setState(() => loading = true);
-                            var res = await Endpoints()
-                                .memberCreate(ci: '123123', pass: '123123');
+                            try{
+                              var res = await Endpoints().memberCreate(ci: cdiController.text, pass: passController.text);
+                              if(!mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(res, style: const TextStyle(color: Colors.white)),
+                                  backgroundColor: Colors.lightGreen,
+                                ),
+                              );
+                            } catch(e) {
+                              print(e);
+                            }
                             setState(() => loading = false);
                           },
                         )
