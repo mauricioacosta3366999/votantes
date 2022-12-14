@@ -17,6 +17,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final storage = const FlutterSecureStorage();
+  bool isSeccionalero = false;
+
+  @override
+  void initState() {
+    storage.read(key: "userType").then((value) => setState(()=>isSeccionalero = value == "seccionalero"));
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,15 +35,16 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              MyTextButton(
-                  text: 'Crear Miembro',
-                  function: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const AgregarVotantes(onlySearchCdi: false)));
-                  }),
+              if(isSeccionalero)
+                MyTextButton(
+                    text: 'Crear Miembro',
+                    function: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const AgregarVotantes(onlySearchCdi: false)));
+                    }),
               MyTextButton(
                   text: 'Agregar votantes',
                   function: () {
@@ -100,8 +108,9 @@ class _HomePageState extends State<HomePage> {
               child: const Text('Cerrar sesión'),
               onPressed: () async {
                 await storage.deleteAll();
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LoginPage()));
+                if(!mounted) return;
+                Navigator.popUntil(context, (route) => false);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage()));
               },
             ),
           ],
