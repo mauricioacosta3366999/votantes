@@ -4,7 +4,6 @@ import 'package:votantes/appConfig.dart';
 import 'package:votantes/pages/widgets/appbar.dart';
 import 'package:votantes/pages/widgets/backImage.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 
 class VotantesList extends StatefulWidget {
   const VotantesList({super.key});
@@ -130,8 +129,8 @@ class _VotantesListState extends State<VotantesList> {
 
   _launchWhatsapp() async {
     try {
-      String text = "Hello World !! Hey There";
-      String url = "https://wa.me/595984813734?text=${Uri.encodeFull(text)}";
+      String text = "Esto es un mensaje de prueba";
+      String url = "https://wa.me/595982763732?text=${Uri.encodeFull(text)}";
       if (await canLaunchUrl(Uri.parse(url))) {
         await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
       }
