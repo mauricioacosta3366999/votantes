@@ -75,18 +75,19 @@ class _LoginPageState extends State<LoginPage> {
     if (emailController.text.isEmpty || passController.text.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(showSnack('Completa todos los campos', 3));
+      return;
+    }
+    setState(() => loading = true);
+    bool loginSuccess = await Endpoints().login(pass: passController.text, user: emailController.text);
+    if(!mounted) return;
+    if (loginSuccess) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
-      setState(() => loading = true);
-      bool loginSuccess = await Endpoints()
-          .login(pass: passController.text, user: emailController.text);
-      if (loginSuccess) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
-      } else {
-        setState(() => loading = false);
-        ScaffoldMessenger.of(context)
-            .showSnackBar(showSnack('Credenciales incorrectos', 3));
-      }
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+          showSnack('Credenciales incorrectos', 3),
+      );
     }
   }
 

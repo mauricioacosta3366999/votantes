@@ -11,11 +11,10 @@ class Endpoints {
   Future login({required String user, required String pass}) async {
     var url = '$baseUrl/api/collections/users/auth-with-password';
     try {
-      var response =
-          await app.post(url, data: {"identity": user, "password": pass});
+      var response = await app.post(url, data: {"identity": user, "password": pass});
       await storage.write(key: 'token', value: response.data['token']);
-      await storage.write(
-          key: 'userName', value: response.data['record']['name']);
+      await storage.write(key: 'userName', value: response.data['record']['name']);
+      await storage.write(key: 'userType', value: response.data['record']['type']);
       return true;
     } catch (e) {
       return false;
