@@ -108,4 +108,43 @@ class Endpoints {
       throw ClientException();
     }
   }
+
+  Future<List>? getVotantes() async {
+    try {
+      var userId = await storage.read(key: "userId");
+      var userType = await storage.read(key: 'userType');
+      var resultList = [];
+
+      if(userType == "seccionalero") {
+        final seccionalero = await pb.collection('seccionaleros').getFirstListItem(
+          'usuario="$userId"',
+          expand: 'relField1,relField2.subRelField',
+        );
+        resultList = (await pb.collection('votantes').getList(
+          filter: 'seccionalero_que_registro = "${seccionalero.id}"',
+          expand: "empadronado",
+        )).items;
+      } else {
+        final miembro = await pb.collection('miembros').getFirstListItem(
+          'usuario="$userId"',
+          expand: 'relField1,relField2.subRelField',
+        );
+        resultList = (await pb.collection('votantes').getList(
+          filter: 'miembro_que_registro = "${miembro.id}"',
+          expand: "empadronado",
+        )).items;
+      }
+
+      resultList = await pb.collection('votantes').getFullList(
+        batch: 200,
+        sort: '-created',
+        expand: "empadronado, empadronado.nombres, empadronado.apellidos, empadronados, empadronados.nombres",
+      );
+
+      return resultList;
+    } catch(e) {
+      print(e);
+    }
+    return [];
+  }
 }
