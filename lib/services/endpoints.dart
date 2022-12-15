@@ -66,6 +66,14 @@ class Endpoints {
       } else {
         CdiDetallesModel model =
             CdiDetallesModel.fromJson(response.data['items'][0]);
+        final body = <String, dynamic>{
+          "ci": model.ci,
+          "apellidos": model.apellidos,
+          "nombres": model.nombres,
+          "celular": phone,
+        };
+        final newData =
+            await pb.collection('empadronados').update(model.id!, body: body);
         return model;
       }
     } catch (e) {

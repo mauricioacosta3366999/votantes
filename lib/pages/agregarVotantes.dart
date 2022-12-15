@@ -40,7 +40,9 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   Text(
-                    'Registrá el votó de la persona',
+                    widget.onlySearchCdi
+                        ? 'Registrá el votó de la persona'
+                        : 'Agregá a tu lista de votantes',
                     style: AppCongig().prymaryTextStyle,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
@@ -49,6 +51,7 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                         Icons.chrome_reader_mode_rounded,
                         color: Colors.white,
                       ),
+                      keyboardType: TextInputType.number,
                       controller: cdiController,
                       labelText: "Número de CDI"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
@@ -59,6 +62,7 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                             Icons.phone,
                             color: Colors.white,
                           ),
+                          keyboardType: TextInputType.number,
                           controller: phoneController,
                           labelText: "Número de teléfono"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
@@ -85,8 +89,8 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
           .showSnackBar(showSnack('Agregá un número de cédula', 3));
     } else {
       setState(() => loading = true);
-      CdiDetallesModel cdiDetalles =
-          await Endpoints().searchByCi(cdi: cdiController.text);
+      CdiDetallesModel cdiDetalles = await Endpoints()
+          .searchByCi(cdi: cdiController.text, phone: phoneController.text);
       if (cdiDetalles.ci != null) {
         cdiDetalles.celular = phoneController.text;
         Navigator.push(
