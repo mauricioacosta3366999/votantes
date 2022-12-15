@@ -28,7 +28,8 @@ class _VotantesListState extends State<VotantesList> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: const PreferredSize(preferredSize: Size(0, 60), child: MyAppbar()),
+      appBar:
+          const PreferredSize(preferredSize: Size(0, 60), child: MyAppbar()),
       body: Stack(children: [
         const BackgroundImage(),
         SingleChildScrollView(
@@ -46,7 +47,7 @@ class _VotantesListState extends State<VotantesList> {
                 children: [
                   Container(
                     alignment: Alignment.center,
-                    width: size.width * 0.2,
+                    width: size.width * 0.35,
                     child: const Text(
                       'Nombre',
                       style: TextStyle(color: Colors.white, fontSize: 14),
@@ -62,20 +63,20 @@ class _VotantesListState extends State<VotantesList> {
                   ),
                   Container(
                     alignment: Alignment.center,
-                    width: size.width * 0.2,
-                    child: const Text(
-                      'Contactos',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
                     width: size.width * 0.15,
                     child: const Text(
                       'Ya voto',
                       style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
-                  )
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    width: size.width * 0.3,
+                    child: const Text(
+                      'Contactos',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 5),
@@ -87,7 +88,7 @@ class _VotantesListState extends State<VotantesList> {
                       children: [
                         Container(
                           alignment: Alignment.center,
-                          width: size.width * 0.2,
+                          width: size.width * 0.35,
                           child: const Text(
                             'test test',
                             style: TextStyle(color: Colors.white, fontSize: 12),
@@ -101,23 +102,25 @@ class _VotantesListState extends State<VotantesList> {
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          width: size.width * 0.2,
-                          child: const Text(
-                            '0984157824',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ),
+                        // Container(
+                        //   alignment: Alignment.center,
+                        //   width: size.width * 0.2,
+                        //   child: const Text(
+                        //     '0984157824',
+                        //     style: TextStyle(color: Colors.white, fontSize: 12),
+                        //   ),
+                        // ),
                         SizedBox(
-                          width: size.width * 0.15,
-                          child: item.data["ya_voto"] ? const Icon(
-                            Icons.check,
-                            color: Colors.lightGreenAccent,
-                          ) : const Icon(
-                            Icons.close,
-                            color: Colors.red,
-                          ),
+                          width: size.width * 0.2,
+                          child: item.data["ya_voto"]
+                              ? const Icon(
+                                  Icons.check,
+                                  color: Colors.lightGreenAccent,
+                                )
+                              : const Icon(
+                                  Icons.close,
+                                  color: Colors.red,
+                                ),
                         ),
                         Row(
                           children: [
@@ -125,7 +128,7 @@ class _VotantesListState extends State<VotantesList> {
                               icon: const Icon(
                                 Icons.whatsapp,
                                 color: Colors.white,
-                                size: 30,
+                                size: 25,
                               ),
                               onPressed: () {
                                 _launchWhatsapp();
@@ -135,7 +138,7 @@ class _VotantesListState extends State<VotantesList> {
                               icon: const Icon(
                                 Icons.phone,
                                 color: Colors.white,
-                                size: 30,
+                                size: 25,
                               ),
                               onPressed: () {
                                 _launchCaller();
