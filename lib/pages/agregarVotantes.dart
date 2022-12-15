@@ -67,7 +67,9 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                           labelText: "Número de teléfono"),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   loading
-                      ? const CircularProgressIndicator()
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
                       : PrymaryButton(
                           text: 'Buscar datos',
                           function: () async {

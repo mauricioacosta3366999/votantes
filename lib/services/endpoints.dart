@@ -136,7 +136,7 @@ class Endpoints {
   }
 
   Future<String> memberCreate(
-      {required String ci, required String pass}) async {
+      {required String ci, required String pass, String? nombre}) async {
     String? value = await storage.read(key: 'token');
     app.options.headers['content-Type'] = 'application/json';
     app.options.headers["Authorization"] = "Bearer $value";
@@ -151,7 +151,8 @@ class Endpoints {
         "username": ci,
         "password": pass,
         "passwordConfirm": pass,
-        "type": "miembro"
+        "type": "miembro",
+        "name": nombre
       };
       final user = await pb.collection('users').create(body: userDto);
       final memberDto = <String, dynamic>{

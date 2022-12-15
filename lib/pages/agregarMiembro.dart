@@ -15,6 +15,7 @@ class AgregarMiembro extends StatefulWidget {
 class _AgregarMiembroState extends State<AgregarMiembro> {
   final cdiController = TextEditingController();
   final passController = TextEditingController();
+  final nameController = TextEditingController();
   bool loading = false;
   @override
   Widget build(BuildContext context) {
@@ -43,6 +44,14 @@ class _AgregarMiembroState extends State<AgregarMiembro> {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   MyTextField(
                       icon: const Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
+                      controller: nameController,
+                      labelText: "Nombre"),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                  MyTextField(
+                      icon: const Icon(
                         Icons.chrome_reader_mode_rounded,
                         color: Colors.white,
                       ),
@@ -61,29 +70,30 @@ class _AgregarMiembroState extends State<AgregarMiembro> {
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                   loading
-                      ? const CircularProgressIndicator()
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
                       : PrymaryButton(
                           text: 'Crear miembro',
                           function: () async {
+                            bool validate = valiations();
                             setState(() => loading = true);
-                            try {
-                              var res = await Endpoints().memberCreate(
-                                  ci: cdiController.text,
-                                  pass: passController.text);
-                              if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(res,
-                                      style:
-                                          const TextStyle(color: Colors.white)),
-                                  backgroundColor: Colors.green[400],
-                                ),
-                              );
-                            } catch (e) {
-                              print(e);
+                            if (validate) {
+                              try {
+                                var res = await Endpoints().memberCreate(
+                                    ci: cdiController.text,
+                                    pass: passController.text,
+                                    nombre: nameController.text);
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(showSnack(res, 3, true));
+                              } catch (e) {
+                                print(e);
+                              }
+                              setState(() => loading = false);
+                              Navigator.pop(context);
                             }
                             setState(() => loading = false);
-                            Navigator.pop(context);
                           },
                         )
                 ],
@@ -91,6 +101,36 @@ class _AgregarMiembroState extends State<AgregarMiembro> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  valiations() {
+    if (cdiController.text.isEmpty || passController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(showSnack('Completa todos los campos', 3, false));
+      return false;
+    } else if (cdiController.text.length != 7) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(showSnack('CDI inválido.', 3, false));
+      return false;
+    } else if (passController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          showSnack('La contraseña debe contener minimo 8 digitos.', 3, false));
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  showSnack(String text, int duration, bool isGreen) {
+    return SnackBar(
+      duration: Duration(seconds: duration),
+      content: Text(text),
+      backgroundColor: isGreen ? Colors.green[400] : Colors.red[400],
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
     );
   }

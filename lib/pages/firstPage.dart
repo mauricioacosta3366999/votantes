@@ -27,7 +27,7 @@ class _FirstPageState extends State<FirstPage> {
 
   userDataCheck() async {
     String? value = await storage.read(key: 'token');
-    String? userName = await storage.read(key: 'userName');
+    String? userName = await storage.read(key: 'userId');
     print(value);
     print(userName);
     if (mounted) {

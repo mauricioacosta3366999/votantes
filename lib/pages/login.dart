@@ -13,7 +13,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final emailController = TextEditingController();
+  final cdiController = TextEditingController();
   final passController = TextEditingController();
   bool loading = false;
 
@@ -38,7 +38,8 @@ class _LoginPageState extends State<LoginPage> {
                           Icons.person,
                           color: Colors.white,
                         ),
-                        controller: emailController,
+                        keyboardType: TextInputType.number,
+                        controller: cdiController,
                         labelText: 'Usuario',
                       ),
                       const SizedBox(height: 30),
@@ -53,7 +54,9 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 50),
                       loading
-                          ? const CircularProgressIndicator()
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
                           : PrymaryButton(
                               text: 'Ingresar',
                               function: () {
@@ -72,21 +75,29 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   validation() async {
-    if (emailController.text.isEmpty || passController.text.isEmpty) {
+    if (cdiController.text.isEmpty || passController.text.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(showSnack('Completa todos los campos', 3));
       return;
+    } else if (cdiController.text.length != 7) {
+      ScaffoldMessenger.of(context).showSnackBar(showSnack('CDI inválido.', 3));
+      return;
+    } else if (passController.text.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          showSnack('La contraseña debe contener minimo 8 digitos.', 3));
+      return;
     }
     setState(() => loading = true);
-    bool loginSuccess = await Endpoints().login(pass: passController.text, user: emailController.text);
-    if(!mounted) return;
+    bool loginSuccess = await Endpoints()
+        .login(pass: passController.text, user: cdiController.text);
+    if (!mounted) return;
     if (loginSuccess) {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const HomePage()));
     } else {
       setState(() => loading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-          showSnack('Credenciales incorrectos', 3),
+        showSnack('Credenciales incorrectos', 3),
       );
     }
   }

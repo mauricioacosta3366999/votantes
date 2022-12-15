@@ -68,7 +68,9 @@ class _CdiDataState extends State<CdiData> {
               ),
               const SizedBox(height: 50),
               loading
-                  ? const CircularProgressIndicator()
+                  ? const CircularProgressIndicator(
+                      color: Colors.white,
+                    )
                   : widget.voteRegister
                       ? PrymaryButton(
                           text: 'Ya votó',
