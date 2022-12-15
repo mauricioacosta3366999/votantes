@@ -17,7 +17,7 @@ class Endpoints {
       var response =
           await app.post(url, data: {"identity": user, "password": pass});
       await storage.write(key: 'token', value: response.data['token']);
-      await storage.write(key: 'id', value: response.data['id']);
+      await storage.write(key: 'userId', value: response.data["record"]['id']);
       await storage.write(
           key: 'userName', value: response.data['record']['name']);
       await storage.write(
@@ -71,6 +71,27 @@ class Endpoints {
     } catch (e) {
       print(e);
       return CdiDetallesModel();
+    }
+  }
+
+  crearVotante(
+      {required String empadronadoId,
+      String? memberId,
+      String? seecionaleroId}) async {
+    String? value = await storage.read(key: 'token');
+    app.options.headers["Authorization"] = "Bearer $value";
+    var url = '$baseUrl/api/collections/votantes/records';
+    try {
+      var res = await app.post(url, data: {
+        "empadronado": empadronadoId,
+        "ya_voto": false,
+        "miembro_que_registro": memberId,
+        "seccionalero_que_registro": seecionaleroId
+      });
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
     }
   }
 
