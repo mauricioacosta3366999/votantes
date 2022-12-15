@@ -45,8 +45,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const AgregarMiembro()));
+                              builder: (context) => const AgregarMiembro()));
                     }),
               MyTextButton(
                   text: 'Agregar votantes',
@@ -68,8 +67,11 @@ class _HomePageState extends State<HomePage> {
               MyTextButton(
                   text: 'Dia D',
                   function: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const DayD()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AgregarVotantes(onlySearchCdi: true)));
                   }),
               MyTextButton(
                   text: 'Desconectarse',

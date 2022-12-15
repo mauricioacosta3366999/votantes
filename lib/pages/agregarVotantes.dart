@@ -35,12 +35,12 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Agregar Votantes',
+                    widget.onlySearchCdi ? 'Buscar cédula' : 'Agregar Votantes',
                     style: AppCongig().prymaryStrongTextStyle,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.03),
                   Text(
-                    'Cargá el número de cédula',
+                    'Registrá el votó de la persona',
                     style: AppCongig().prymaryTextStyle,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.05),
@@ -94,6 +94,7 @@ class _AgregarVotantesState extends State<AgregarVotantes> {
             MaterialPageRoute(
                 builder: (context) => CdiData(
                       cdiDetalles: cdiDetalles,
+                      voteRegister: widget.onlySearchCdi ? true : false,
                     )));
         setState(() => loading = false);
       } else {
