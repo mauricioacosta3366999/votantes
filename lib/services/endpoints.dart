@@ -199,12 +199,12 @@ class Endpoints {
             .items;
       }
 
-      resultList = await pb.collection('votantes').getFullList(
-            batch: 200,
-            sort: '-created',
-            expand:
-                "empadronado, empadronado.nombres, empadronado.apellidos, empadronados, empadronados.nombres",
-          );
+      // resultList = await pb.collection('votantes').getFullList(
+      //       batch: 200,
+      //       sort: '-created',
+      //       expand:
+      //           "empadronado, empadronado.nombres, empadronado.apellidos, empadronados, empadronados.nombres",
+      //     );
 
       return resultList;
     } catch (e) {
