@@ -15,12 +15,14 @@ class VotantesList extends StatefulWidget {
 
 class _VotantesListState extends State<VotantesList> {
   List votantes = [];
+  bool loading = true;
 
   @override
   void initState() {
-    Endpoints()
-        .getVotantes()
-        ?.then((items) => setState(() => votantes = items));
+    Endpoints().getVotantes()?.then((items) => setState(() {
+          votantes = items;
+          loading = false;
+        }));
     super.initState();
   }
 
@@ -32,133 +34,144 @@ class _VotantesListState extends State<VotantesList> {
           const PreferredSize(preferredSize: Size(0, 60), child: MyAppbar()),
       body: Stack(children: [
         const BackgroundImage(),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              Text(
-                'Lista de Votantes',
-                style: AppCongig().prymaryStrongTextStyle,
-              ),
-              const SizedBox(height: 30),
-              Row(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    width: size.width * 0.35,
-                    child: const Text(
-                      'Nombre',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: size.width * 0.2,
-                    child: const Text(
-                      'Cédula',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: size.width * 0.15,
-                    child: const Text(
-                      'Ya voto',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    width: size.width * 0.3,
-                    child: const Text(
-                      'Contactos',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              for (var item in votantes)
-                Column(
+        loading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              )
+            : SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Divider(color: Colors.white),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Lista de Votantes',
+                      style: AppCongig().prymaryStrongTextStyle,
+                    ),
+                    const SizedBox(height: 30),
                     Row(
                       children: [
                         Container(
                           alignment: Alignment.center,
                           width: size.width * 0.35,
                           child: const Text(
-                            'test test',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                            'Nombre',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ),
                         Container(
                           alignment: Alignment.center,
                           width: size.width * 0.2,
                           child: const Text(
-                            '5.335.102',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                            'Cédula',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ),
-                        // Container(
-                        //   alignment: Alignment.center,
-                        //   width: size.width * 0.2,
-                        //   child: const Text(
-                        //     '0984157824',
-                        //     style: TextStyle(color: Colors.white, fontSize: 12),
-                        //   ),
-                        // ),
-                        SizedBox(
-                          width: size.width * 0.2,
-                          child: item.data["ya_voto"]
-                              ? const Icon(
-                                  Icons.check,
-                                  color: Colors.lightGreenAccent,
-                                )
-                              : const Icon(
-                                  Icons.close,
-                                  color: Colors.red,
-                                ),
+                        Container(
+                          alignment: Alignment.center,
+                          width: size.width * 0.15,
+                          child: const Text(
+                            'Ya voto',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.whatsapp,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                              onPressed: () {
-                                _launchWhatsapp();
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.phone,
-                                color: Colors.white,
-                                size: 25,
-                              ),
-                              onPressed: () {
-                                _launchCaller();
-                              },
-                            ),
-                          ],
-                        )
+                        Container(
+                          alignment: Alignment.center,
+                          width: size.width * 0.3,
+                          child: const Text(
+                            'Contactos',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ),
                       ],
                     ),
+                    const SizedBox(height: 5),
+                    for (var item in votantes)
+                      Column(
+                        children: [
+                          const Divider(color: Colors.white),
+                          Row(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                width: size.width * 0.35,
+                                child: Text(
+                                  item.data["nombre"],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12),
+                                ),
+                              ),
+                              Container(
+                                alignment: Alignment.center,
+                                width: size.width * 0.2,
+                                child: Text(
+                                  item.data["cdi"].toString(),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12),
+                                ),
+                              ),
+                              // Container(
+                              //   alignment: Alignment.center,
+                              //   width: size.width * 0.2,
+                              //   child: const Text(
+                              //     '0984157824',
+                              //     style: TextStyle(color: Colors.white, fontSize: 12),
+                              //   ),
+                              // ),
+                              SizedBox(
+                                width: size.width * 0.2,
+                                child: item.data["ya_voto"]
+                                    ? const Icon(
+                                        Icons.check,
+                                        color: Colors.lightGreenAccent,
+                                      )
+                                    : const Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                      ),
+                              ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.whatsapp,
+                                      color: Colors.white,
+                                      size: 25,
+                                    ),
+                                    onPressed: () {
+                                      _launchWhatsapp(
+                                          item.data["telefono"].toString());
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.phone,
+                                      color: Colors.white,
+                                      size: 25,
+                                    ),
+                                    onPressed: () {
+                                      _launchCaller(
+                                          item.data["telefono"].toString());
+                                    },
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                   ],
                 ),
-            ],
-          ),
-        )
+              )
       ]),
     );
   }
 
-  _launchCaller() async {
-    const url = "tel:0982763732";
+  _launchCaller(String phone) async {
+    var url = "tel:0$phone";
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
     } else {
@@ -166,10 +179,10 @@ class _VotantesListState extends State<VotantesList> {
     }
   }
 
-  _launchWhatsapp() async {
+  _launchWhatsapp(String phone) async {
     try {
       String text = "Esto es un mensaje de prueba";
-      String url = "https://wa.me/595982763732?text=${Uri.encodeFull(text)}";
+      String url = "https://wa.me/595$phone?text=${Uri.encodeFull(text)}";
       if (await canLaunchUrl(Uri.parse(url))) {
         await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
       }

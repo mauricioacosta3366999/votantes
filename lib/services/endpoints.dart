@@ -85,7 +85,10 @@ class Endpoints {
   crearVotante(
       {required String empadronadoId,
       String? memberId,
-      String? seecionaleroId}) async {
+      String? seecionaleroId,
+      String? nombre,
+      int? cdi,
+      String? telefono}) async {
     String? value = await storage.read(key: 'token');
     app.options.headers["Authorization"] = "Bearer $value";
     var url = '$baseUrl/api/collections/votantes/records';
@@ -94,7 +97,10 @@ class Endpoints {
         "empadronado": empadronadoId,
         "ya_voto": false,
         "miembro_que_registro": memberId,
-        "seccionalero_que_registro": seecionaleroId
+        "seccionalero_que_registro": seecionaleroId,
+        "nombre": nombre,
+        "telefono": telefono,
+        "cdi": cdi
       });
       return true;
     } catch (e) {
@@ -170,34 +176,38 @@ class Endpoints {
       var userType = await storage.read(key: 'userType');
       var resultList = [];
 
-      if(userType == "seccionalero") {
-        final seccionalero = await pb.collection('seccionaleros').getFirstListItem(
-          'usuario="$userId"',
-          expand: 'relField1,relField2.subRelField',
-        );
+      if (userType == "seccionalero") {
+        final seccionalero =
+            await pb.collection('seccionaleros').getFirstListItem(
+                  'usuario="$userId"',
+                  expand: 'relField1,relField2.subRelField',
+                );
         resultList = (await pb.collection('votantes').getList(
-          filter: 'seccionalero_que_registro = "${seccionalero.id}"',
-          expand: "empadronado",
-        )).items;
+                  filter: 'seccionalero_que_registro = "${seccionalero.id}"',
+                  expand: "empadronado",
+                ))
+            .items;
       } else {
         final miembro = await pb.collection('miembros').getFirstListItem(
-          'usuario="$userId"',
-          expand: 'relField1,relField2.subRelField',
-        );
+              'usuario="$userId"',
+              expand: 'relField1,relField2.subRelField',
+            );
         resultList = (await pb.collection('votantes').getList(
-          filter: 'miembro_que_registro = "${miembro.id}"',
-          expand: "empadronado",
-        )).items;
+                  filter: 'miembro_que_registro = "${miembro.id}"',
+                  expand: "empadronado",
+                ))
+            .items;
       }
 
       resultList = await pb.collection('votantes').getFullList(
-        batch: 200,
-        sort: '-created',
-        expand: "empadronado, empadronado.nombres, empadronado.apellidos, empadronados, empadronados.nombres",
-      );
+            batch: 200,
+            sort: '-created',
+            expand:
+                "empadronado, empadronado.nombres, empadronado.apellidos, empadronados, empadronados.nombres",
+          );
 
       return resultList;
-    } catch(e) {
+    } catch (e) {
       print(e);
     }
     return [];

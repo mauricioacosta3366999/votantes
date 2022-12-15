@@ -152,7 +152,11 @@ class _CdiDataState extends State<CdiData> {
         res = await Endpoints().crearVotante(
             empadronadoId: widget.cdiDetalles.id!,
             memberId: miembro.id,
-            seecionaleroId: miembro.data['seccionalero']);
+            seecionaleroId: miembro.data['seccionalero'],
+            cdi: widget.cdiDetalles.ci,
+            nombre:
+                '${widget.cdiDetalles.nombres} ${widget.cdiDetalles.apellidos}',
+            telefono: widget.cdiDetalles.celular);
         setState(() => loading = false);
       } catch (e) {
         setState(() => loading = false);
@@ -167,7 +171,11 @@ class _CdiDataState extends State<CdiData> {
                 );
         res = await Endpoints().crearVotante(
             empadronadoId: widget.cdiDetalles.id!,
-            seecionaleroId: seccionalero.id);
+            seecionaleroId: seccionalero.id,
+            cdi: widget.cdiDetalles.ci,
+            nombre:
+                '${widget.cdiDetalles.nombres} ${widget.cdiDetalles.apellidos}',
+            telefono: widget.cdiDetalles.celular);
         setState(() => loading = false);
       } catch (e) {
         setState(() => loading = false);
