@@ -12,7 +12,9 @@ import 'package:votantes/services/endpoints.dart';
 
 class CdiData extends StatefulWidget {
   final CdiDetallesModel cdiDetalles;
-  const CdiData({super.key, required this.cdiDetalles});
+  final bool voteRegister;
+  const CdiData(
+      {super.key, required this.cdiDetalles, required this.voteRegister});
 
   @override
   State<CdiData> createState() => _CdiDataState();
@@ -67,17 +69,72 @@ class _CdiDataState extends State<CdiData> {
               const SizedBox(height: 50),
               loading
                   ? const CircularProgressIndicator()
-                  : PrymaryButton(
-                      text: 'Agregar votante',
-                      function: () {
-                        addVot();
-                      },
-                    )
+                  : widget.voteRegister
+                      ? PrymaryButton(
+                          text: 'Ya votó',
+                          function: () {
+                            registerVote();
+                          },
+                        )
+                      : PrymaryButton(
+                          text: 'Agregar votante',
+                          function: () {
+                            addVot();
+                          },
+                        )
             ],
           ),
         )
       ]),
     );
+  }
+
+  registerVote() async {
+    setState(() => loading = true);
+    final pb = PocketBase('https://pocketbase-production-a3d9.up.railway.app');
+    bool res = false;
+    var userType = await storage.read(key: "userType");
+    var userId = await storage.read(key: "userId");
+    if (userType == 'miembro') {
+      try {
+        final miembro = await pb.collection('miembros').getFirstListItem(
+              'usuario="$userId"',
+              expand: 'relField1,relField2.subRelField',
+            );
+        res = await Endpoints().editarVoto(
+            empadronadoId: widget.cdiDetalles.id!,
+            memberId: miembro.id,
+            seecionaleroId: miembro.data['seccionalero']);
+        setState(() => loading = false);
+      } catch (e) {
+        setState(() => loading = false);
+        print(e);
+      }
+    } else {
+      try {
+        final seccionalero =
+            await pb.collection('seccionaleros').getFirstListItem(
+                  'usuario="$userId"',
+                  expand: 'relField1,relField2.subRelField',
+                );
+        res = await Endpoints().editarVoto(
+            empadronadoId: widget.cdiDetalles.id!,
+            seecionaleroId: seccionalero.id);
+        setState(() => loading = false);
+      } catch (e) {
+        setState(() => loading = false);
+        print(e);
+      }
+    }
+    Navigator.pop(context);
+    setState(() => loading = false);
+    if (res) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(showSnack('Voto registrado exitosamente.', 3, true));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          showSnack('Esta persona no fue agregada a la lista.', 3, false));
+    }
   }
 
   addVot() async {

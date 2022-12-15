@@ -66,19 +66,24 @@ class _AgregarMiembroState extends State<AgregarMiembro> {
                           text: 'Crear miembro',
                           function: () async {
                             setState(() => loading = true);
-                            try{
-                              var res = await Endpoints().memberCreate(ci: cdiController.text, pass: passController.text);
-                              if(!mounted) return;
+                            try {
+                              var res = await Endpoints().memberCreate(
+                                  ci: cdiController.text,
+                                  pass: passController.text);
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(res, style: const TextStyle(color: Colors.white)),
-                                  backgroundColor: Colors.lightGreen,
+                                  content: Text(res,
+                                      style:
+                                          const TextStyle(color: Colors.white)),
+                                  backgroundColor: Colors.green[400],
                                 ),
                               );
-                            } catch(e) {
+                            } catch (e) {
                               print(e);
                             }
                             setState(() => loading = false);
+                            Navigator.pop(context);
                           },
                         )
                 ],

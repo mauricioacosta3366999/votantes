@@ -27,15 +27,17 @@ class _FirstPageState extends State<FirstPage> {
 
   userDataCheck() async {
     String? value = await storage.read(key: 'token');
+    String? userName = await storage.read(key: 'userName');
     print(value);
-    if(mounted) {
-      if(value != null) {
+    print(userName);
+    if (mounted) {
+      if (value != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const HomePage()));
         return;
       } else {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const LoginPage()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const LoginPage()));
       }
     }
   }

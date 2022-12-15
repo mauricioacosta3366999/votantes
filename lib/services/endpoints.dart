@@ -95,6 +95,32 @@ class Endpoints {
     }
   }
 
+  editarVoto(
+      {required String empadronadoId,
+      String? memberId,
+      String? seecionaleroId}) async {
+    String? value = await storage.read(key: 'token');
+    app.options.headers["Authorization"] = "Bearer $value";
+    try {
+      final record = await pb.collection('votantes').getFirstListItem(
+            'empadronado="$empadronadoId"',
+            expand: 'relField1,relField2.subRelField',
+          );
+      var url = '$baseUrl/api/collections/votantes/records/${record.id}';
+      var res = await app.patch(url, data: {
+        "empadronado": empadronadoId,
+        "ya_voto": true,
+        "miembro_que_registro": memberId,
+        "seccionalero_que_registro": seecionaleroId
+      });
+      print(res);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   Future<String> memberCreate(
       {required String ci, required String pass}) async {
     String? value = await storage.read(key: 'token');
@@ -124,7 +150,7 @@ class Endpoints {
       };
 
       await pb.collection('miembros').create(body: memberDto);
-      return "Miembro Creado exitosamente";
+      return "Miembro creado exitosamente";
     } catch (e) {
       throw ClientException();
     }
